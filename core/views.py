@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializer
+from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializer, ProfileSerializer
 from rest_framework import status, viewsets
 from rest_framework import generics
-from .models import Experience, Education, Link
+from .models import Experience, Education, Link, Profile
 from rest_framework.response import Response
 # Create your views here.
 
@@ -55,6 +55,8 @@ class ExperienceRetrieveUpdate(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
+
+class ProfileListCreate(generics.ListCreateAPIView):
 
 class education(generics.ListCreateAPIView):
     queryset = Education.objects.all()

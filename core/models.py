@@ -22,6 +22,8 @@ class Education(models.Model):
     Started = models.DateField(max_length = 20)
     Ended = models.DateField(default = 'Present', max_length = 20)
     Location = models.CharField(max_length = 50)
+    slug = AutoSlugField(populate_from ='certificate')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Experience(models.Model):
@@ -31,9 +33,7 @@ class Experience(models.Model):
     started = models.DateField(max_length = 20)
     ended = models.DateField(default = 'Present', max_length = 20)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    slug = AutoSlugField(populate_from ='position')
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    slug = AutoSlugField(populate_from ="position", unique=True)
 
     def __str__(self):
         return self.certificate
@@ -44,7 +44,8 @@ class Link(models.Model):
     facebook = models.CharField(max_length = 50, default= '')
     linkedIn = models.CharField(max_length = 50, default= '')
     github = models.CharField(max_length = 50, )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    slug = AutoSlugField(populate_from ='github')
 
     def __str__(self):
         return self.github
