@@ -6,7 +6,7 @@ from django_countries.fields import CountryField
 # Create your models here.
 
 class Profile(models.Model):
-    firstame = models.CharField(max_length= 20)
+    firstname = models.CharField(max_length= 20)
     lastname = models.CharField(max_length= 20)
     phone = models.IntegerField(default = '+2348170371922')
     country = CountryField(default='NG')

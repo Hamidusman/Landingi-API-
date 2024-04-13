@@ -57,6 +57,21 @@ class ExperienceRetrieveUpdate(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProfileListCreate(generics.ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'id'
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class education(generics.ListCreateAPIView):
     queryset = Education.objects.all()
