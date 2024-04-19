@@ -3,7 +3,15 @@ from django.contrib.auth.models import User
 from datetime import date
 from autoslug import AutoSlugField
 from django_countries.fields import CountryField
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.conf import settings
 # Create your models here.
+
+class CustomUser(AbstractUser, PermissionsMixin):
+    username = models.CharField(max_length=20, unique=True)
+    email = models.EmailField(max_length=20)
+    password = models.CharField(max_length=8)
+
 
 class Profile(models.Model):
     firstname = models.CharField(max_length= 20)
@@ -13,7 +21,7 @@ class Profile(models.Model):
     city = models.CharField(max_length= 20)
     address = models.CharField(max_length= 100)
     Dob = models.DateField(null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = AutoSlugField(populate_from ='firstname')
 
 class Education(models.Model):
@@ -23,7 +31,7 @@ class Education(models.Model):
     Ended = models.DateField(default = 'Present', max_length = 20)
     Location = models.CharField(max_length = 50)
     slug = AutoSlugField(populate_from ='certificate')
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
 class Experience(models.Model):
@@ -32,7 +40,7 @@ class Experience(models.Model):
     description = models.CharField(max_length = 1000)
     started = models.DateField(max_length = 20)
     ended = models.DateField(default = 'Present', max_length = 20)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = AutoSlugField(populate_from ="position", unique=True)
 
     def __str__(self):
@@ -44,7 +52,7 @@ class Link(models.Model):
     facebook = models.CharField(max_length = 50, default= '')
     linkedIn = models.CharField(max_length = 50, default= '')
     github = models.CharField(max_length = 50, )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = AutoSlugField(populate_from ='github')
 
     def __str__(self):

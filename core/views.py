@@ -2,13 +2,19 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializer, ProfileSerializer
+from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializer, ProfileSerializer, UserSerializer
 from rest_framework import status, viewsets
 from rest_framework import generics
 from .models import Experience, Education, Link, Profile
 from rest_framework.response import Response
 # Create your views here.
 
+class Register(generics.ListCreateAPIView):
+    def create(self, request, *args, **kwargs):
+        serializer = UserSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class ExperienceListCreate(generics.ListCreateAPIView):
