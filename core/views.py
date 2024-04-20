@@ -5,21 +5,31 @@ from rest_framework import status
 from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializer, ProfileSerializer, UserSerializer
 from rest_framework import status, viewsets
 from rest_framework import generics
-from .models import Experience, Education, Link, Profile
+from .models import Experience, Education, Link, Profile,  CustomUser
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
 class Register(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+
     def create(self, request, *args, **kwargs):
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
 class ExperienceListCreate(generics.ListCreateAPIView):
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -37,6 +47,7 @@ class ExperienceListCreate(generics.ListCreateAPIView):
 class ExperienceRetrieveUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -65,6 +76,7 @@ class ExperienceRetrieveUpdate(generics.RetrieveUpdateDestroyAPIView):
 class ProfileListCreate(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -82,6 +94,7 @@ class ProfileListCreate(generics.ListCreateAPIView):
 class ProfileItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -125,6 +138,7 @@ class EducationListCreate(generics.ListCreateAPIView):
 class EducationItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = Education.objects.all()
     serializer_class = EducationSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -149,6 +163,7 @@ class EducationItem(generics.RetrieveUpdateDestroyAPIView):
 class LinkListCreate(generics.ListCreateAPIView):
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
@@ -167,6 +182,7 @@ class LinkListCreate(generics.ListCreateAPIView):
 class LinkItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
 
