@@ -106,11 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 DJOSER = {
     'SERIALIZERS': {
         'user': 'core.serializers.UserSerializer',  # Optional: Use your custom user serializer
-        'current_user': 'core.serializers.CurrentUserSerializer',  # Optional: For retrieving user info
     },
-    'AUTH_TOKEN_CLASSES': (
-        'djoser.auth.tokens.JwtToken',  # Use JWT for token authentication
-    ),
     # Other djoser configuration options (refer to docs)
 }
 
