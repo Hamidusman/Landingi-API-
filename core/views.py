@@ -12,25 +12,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
-class Register(generics.ListCreateAPIView):
-    serializer_class = UserSerializer
-    queryset = CustomUser.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        serializer = UserSerializer(data = request.data)
-        if serializer.is_valid():
-            user = User.objects.get(username=request.data['username'])
-            user.set_password(request.data['password'])
-            token = Token.objects.create(user=user)
-            return Response({'token': token.key, 'user': serializer.data})
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many = True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        
 class ExperienceListCreate(generics.ListCreateAPIView):
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
