@@ -6,6 +6,8 @@ from .serializers import ExperienceSerializer, EducationSerializer, LinkSerializ
 from rest_framework import status, viewsets
 from rest_framework import generics
 from .models import Experience, Education, Link, Profile,  CustomUser
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
@@ -16,16 +18,19 @@ class Register(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = UserSerializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            user = User.objects.get(username=request.data['username'])
+            user.set_password(request.data['password'])
+            token = Token.objects.create(user=user)
+            return Response({'token': token.key, 'user': serializer.data})
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
-
 class ExperienceListCreate(generics.ListCreateAPIView):
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
